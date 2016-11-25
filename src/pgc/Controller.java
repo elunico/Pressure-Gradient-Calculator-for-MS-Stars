@@ -8,8 +8,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -315,6 +317,80 @@ public class Controller {
 
         okButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> stage.close());
         main.getChildren().add(okButton);
+
+        stage.setScene(new Scene(main));
+        stage.show();
+    }
+
+    public void helpAction(ActionEvent actionEvent) {
+        Stage stage = new Stage();
+        GridPane main = new GridPane();
+
+        stage.setTitle("Help");
+
+        main.setAlignment(Pos.TOP_LEFT);
+        main.setHgap(10);
+        main.setVgap(10);
+        main.setPadding(new Insets(10));
+
+        Label l = new Label("Limit:");
+        main.add(l, 0, 0);
+
+        Label limitDescription = new Label("The limit is the limit of the \n" +
+          "number of sections to divide the star into. For example\n" +
+          "if you set it to the default of 45 the star would be divided \n" +
+          "into 45 regions and the pressure gradient will be calculated\n" +
+          "over 45 separate regions yielding 45 values");
+        main.add(limitDescription, 1, 0);
+
+        Label r = new Label("Start Radius:");
+        Label radiusDescription = new Label("The radius is the starting radius\n" +
+          "of the first of the sections of the star. By default it is 23 million\n" +
+          "meters so the first section's pressure is calculated at 23 million \n" +
+          "meters. Every iteration adds <steps> to the radius until it gets to the\n" +
+          "end of the sun. In other words the entire radius of the star \n" +
+          "should be equal to (limit * steps) + radius. The radius is in meters");
+
+        main.add(r, 0, 1);
+        main.add(radiusDescription, 1, 1);
+
+        Label d = new Label("Density:");
+        Label densityDescription = new Label("The average density over the \n" +
+          "convective zone of the star in grams per cubic centimeter.");
+
+        main.add(d, 0, 2);
+        main.add(densityDescription, 1, 2);
+
+        Label s = new Label("Steps:");
+        Label stepsDescription = new Label("The steps number is a number in meters\n" +
+          "Every step this number will be added to the radius and the pressure will\n" +
+          "be calculated at that section of the sun. This number is added to the \n" +
+          "start radius once an iteration for <limit> iterations. In other words\n" +
+          "The pressure is caculated at radius <start radius> then <steps> is \n" +
+          "added to the <start radius> and the pressure is calculated again\n" +
+          "Then this repeats <limit> times and all results plus a total are output\n" +
+          "to the screen.");
+
+        main.add(s, 0, 3);
+        main.add(stepsDescription, 1, 3);
+
+        Label note = new Label("Note:");
+        main.add(note, 0, 4);
+
+        Label comma = new Label("You may use commas in numbers. Only density allows\n" +
+          "precision beyond the decimal point. The rest are integers");
+
+        main.add(comma, 1, 4);
+
+        Button closeButton = new Button("Close");
+        closeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                stage.close();
+            }
+        });
+
+        main.add(closeButton, 1, 5);
 
         stage.setScene(new Scene(main));
         stage.show();

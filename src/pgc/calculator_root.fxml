@@ -22,16 +22,16 @@
     <GridPane alignment="CENTER_RIGHT" hgap="10" vgap="10">
         <padding><Insets left="10" bottom="10" top="10" right="10"/> </padding>
 
-        <Label text="Limit (Sun=45): " alignment="CENTER_RIGHT"
+        <Label text="Number of Section (Default=45 sections): " alignment="CENTER_RIGHT"
            GridPane.columnIndex="0" GridPane.rowIndex="0" />
 
-        <Label text="Star Radius: " alignment="CENTER_RIGHT"
+        <Label text="Start Radius (Default=23,193,333m): " alignment="CENTER_RIGHT"
                GridPane.columnIndex="0" GridPane.rowIndex="1" />
 
-        <Label text="Density (Default=45)" alignment="CENTER_RIGHT"
+        <Label text="Convective Zone Density (Default=4.5 g/c^3)" alignment="CENTER_RIGHT"
                GridPane.columnIndex="0" GridPane.rowIndex="2"/>
 
-        <Label text="Number of Steps (Default=45,000,000): " alignment="CENTER_RIGHT"
+        <Label text="Number of Steps (Default=45,000,000m): " alignment="CENTER_RIGHT"
                GridPane.columnIndex="0" GridPane.rowIndex="3" />
 
         <TextField GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="limitField"/>
@@ -43,6 +43,8 @@
                   GridPane.columnIndex="0" GridPane.rowIndex="4" />
 
         <Button text="Calculate" GridPane.columnIndex="1" GridPane.rowIndex="4" onAction="#goAction" />
+
+        <Button text="Help" GridPane.columnIndex="0" GridPane.rowIndex="5" onAction="#helpAction"/>
 
 
     </GridPane>
