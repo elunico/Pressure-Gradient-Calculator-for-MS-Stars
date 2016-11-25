@@ -1,0 +1,20 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="Pressure Gradient Calculator">
+    <output-path>$PROJECT_DIR$/out/artifacts/Pressure_Gradient_Calculator</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="pgc.Main" />
+        <option name="description" value="" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="title" value="Pressure Gradient for Main Sequence Stars" />
+        <option name="vendor" value="Thomas Povinelli" />
+        <option name="version" value="1.0" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="Pressure_Gradient_Calculator.jar">
+        <element id="module-output" name="Pressure Gradient Calculator for Main Sequence Stars" />
+      </element>
+    </root>
+  </artifact>
+</component>

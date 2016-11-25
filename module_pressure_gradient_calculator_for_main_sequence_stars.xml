@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_pressure_gradient_calculator_for_main_sequence_stars" default="compile.module.pressure_gradient_calculator_for_main_sequence_stars">
+  <dirname property="module.pressure_gradient_calculator_for_main_sequence_stars.basedir" file="${ant.file.module_pressure_gradient_calculator_for_main_sequence_stars}"/>
+  
+  <property name="module.jdk.home.pressure_gradient_calculator_for_main_sequence_stars" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.pressure_gradient_calculator_for_main_sequence_stars" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.pressure_gradient_calculator_for_main_sequence_stars" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.pressure_gradient_calculator_for_main_sequence_stars" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="pressure_gradient_calculator_for_main_sequence_stars.output.dir" value="${module.pressure_gradient_calculator_for_main_sequence_stars.basedir}/out/production/Pressure Gradient Calculator for Main Sequence Stars"/>
+  <property name="pressure_gradient_calculator_for_main_sequence_stars.testoutput.dir" value="${module.pressure_gradient_calculator_for_main_sequence_stars.basedir}/out/test/Pressure Gradient Calculator for Main Sequence Stars"/>
+  
+  <path id="pressure_gradient_calculator_for_main_sequence_stars.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="pressure_gradient_calculator_for_main_sequence_stars.module.production.classpath">
+    <path refid="${module.jdk.classpath.pressure_gradient_calculator_for_main_sequence_stars}"/>
+  </path>
+  
+  <path id="pressure_gradient_calculator_for_main_sequence_stars.runtime.production.module.classpath">
+    <pathelement location="${pressure_gradient_calculator_for_main_sequence_stars.output.dir}"/>
+  </path>
+  
+  <path id="pressure_gradient_calculator_for_main_sequence_stars.module.classpath">
+    <path refid="${module.jdk.classpath.pressure_gradient_calculator_for_main_sequence_stars}"/>
+    <pathelement location="${pressure_gradient_calculator_for_main_sequence_stars.output.dir}"/>
+  </path>
+  
+  <path id="pressure_gradient_calculator_for_main_sequence_stars.runtime.module.classpath">
+    <pathelement location="${pressure_gradient_calculator_for_main_sequence_stars.testoutput.dir}"/>
+    <pathelement location="${pressure_gradient_calculator_for_main_sequence_stars.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.pressure_gradient_calculator_for_main_sequence_stars">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.pressure_gradient_calculator_for_main_sequence_stars">
+    <patternset refid="excluded.from.module.pressure_gradient_calculator_for_main_sequence_stars"/>
+  </patternset>
+  
+  <path id="pressure_gradient_calculator_for_main_sequence_stars.module.sourcepath">
+    <dirset dir="${module.pressure_gradient_calculator_for_main_sequence_stars.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.pressure_gradient_calculator_for_main_sequence_stars" depends="compile.module.pressure_gradient_calculator_for_main_sequence_stars.production,compile.module.pressure_gradient_calculator_for_main_sequence_stars.tests" description="Compile module Pressure Gradient Calculator for Main Sequence Stars"/>
+  
+  <target name="compile.module.pressure_gradient_calculator_for_main_sequence_stars.production" depends="register.custom.compilers" description="Compile module Pressure Gradient Calculator for Main Sequence Stars; production classes">
+    <mkdir dir="${pressure_gradient_calculator_for_main_sequence_stars.output.dir}"/>
+    <javac2 destdir="${pressure_gradient_calculator_for_main_sequence_stars.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.pressure_gradient_calculator_for_main_sequence_stars}/javac">
+      <compilerarg line="${compiler.args.pressure_gradient_calculator_for_main_sequence_stars}"/>
+      <bootclasspath refid="pressure_gradient_calculator_for_main_sequence_stars.module.bootclasspath"/>
+      <classpath refid="pressure_gradient_calculator_for_main_sequence_stars.module.production.classpath"/>
+      <src refid="pressure_gradient_calculator_for_main_sequence_stars.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.pressure_gradient_calculator_for_main_sequence_stars"/>
+    </javac2>
+    
+    <copy todir="${pressure_gradient_calculator_for_main_sequence_stars.output.dir}">
+      <fileset dir="${module.pressure_gradient_calculator_for_main_sequence_stars.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.pressure_gradient_calculator_for_main_sequence_stars.tests" depends="register.custom.compilers,compile.module.pressure_gradient_calculator_for_main_sequence_stars.production" description="compile module Pressure Gradient Calculator for Main Sequence Stars; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.pressure_gradient_calculator_for_main_sequence_stars" description="cleanup module">
+    <delete dir="${pressure_gradient_calculator_for_main_sequence_stars.output.dir}"/>
+    <delete dir="${pressure_gradient_calculator_for_main_sequence_stars.testoutput.dir}"/>
+  </target>
+</project>
