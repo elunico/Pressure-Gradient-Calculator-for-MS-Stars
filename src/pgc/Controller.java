@@ -11,7 +11,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -138,9 +137,6 @@ public class Controller {
 
             nstage.setScene(new Scene(mainpane));
             nstage.show();
-
-
-
         });
 
         Pair<Double, String> res = calculateMainSequence(limit, radius, steps, density);
@@ -151,12 +147,15 @@ public class Controller {
             totalString = totalString.replace("E", " * (10^") + ")";
 
         area.appendText("\nTotal: " + totalString);
-        area.setFont(new Font("Courier New Bold", 13));
+        String fontFamily = Font.getFamilies().contains("SF Mono") ? "SF Mono Medium" : "Courier New Bold";
+        int height = fontFamily.equals("SF Mono Medium") ? 540 : 525;
+        int fontSize = fontFamily.equals("SF Mono Medium") ? 12 : 13;
+        area.setFont(new Font(fontFamily, fontSize));
         closeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> main.close());
 
         pane.getChildren().addAll(area, saveButton, closeButton);
 
-        main.setScene(new Scene(pane, 360, 525));
+        main.setScene(new Scene(pane, 360, height));
         main.show();
 
     }
@@ -183,7 +182,6 @@ public class Controller {
             else
                 result.add(stringValue);
         }
-
         return new Pair<>(total, String.join("\n", result));
     }
 
@@ -196,7 +194,7 @@ public class Controller {
                 fc.setInitialFileName("untitled.txt");
                 File saveFile = fc.showSaveDialog(usingWindow);
                 if (saveFile == null)
-                    return ;
+                    return;
                 try {
                     if (!saveFile.getName().contains(".txt"))
                         saveFile = new File(saveFile.getAbsolutePath() + ".txt");
@@ -206,7 +204,7 @@ public class Controller {
                           "Do you want to overwrite it?", "Yes", "No");
 
                         if (!doOverwrite)
-                            return ;
+                            return;
                     }
 
                     BufferedWriter br = new BufferedWriter(new FileWriter(saveFile));
@@ -222,13 +220,13 @@ public class Controller {
                 } catch (IOException e) {
                     displayAlert("File does not exist. Save failed!");
                 }
-            break;
+                break;
 
             case EXCEL_TYPE:
                 usingText = usingText.replace("Total: ", "");
                 String[] rawLines = usingText.split("\n");
                 String[] csvLines = new String[rawLines.length];
-                for (int i = 0 ; i < rawLines.length-1; i++) {
+                for (int i = 0; i < rawLines.length - 1; i++) {
                     csvLines[i] = "\"" + rawLines[i] + "\"" + ",";
                 }
 
@@ -236,7 +234,7 @@ public class Controller {
                 fc.setInitialFileName("untitled.csv");
                 saveFile = fc.showSaveDialog(usingWindow);
                 if (saveFile == null)
-                    return ;
+                    return;
                 try {
                     if (!saveFile.getName().contains(".csv"))
                         saveFile = new File(saveFile.getAbsolutePath() + ".csv");
@@ -246,7 +244,7 @@ public class Controller {
                           "Do you want to overwrite it?", "Yes", "No");
 
                         if (!doOverwrite)
-                            return ;
+                            return;
                     }
 
                     BufferedWriter br = new BufferedWriter(new FileWriter(saveFile));
@@ -257,20 +255,18 @@ public class Controller {
                         br.write("\nDensity," + density);
                         br.write("\n,,\n");
                     }
-                    for (int i = 0; i < csvLines.length-1; i++) {
+                    for (int i = 0; i < csvLines.length - 1; i++) {
                         br.write(csvLines[i] + "\n");
                     }
-                    br.write("Total," + csvLines[csvLines.length-1]);
+                    br.write("Total," + rawLines[rawLines.length - 1]);
                     br.close();
                 } catch (IOException e) {
                     displayAlert("File does not exist. Save failed!");
                 }
-
         }
-
     }
 
-    public static boolean displayPrompt(String message, String confirmName, String refuseName) {
+    private static boolean displayPrompt(String message, String confirmName, String refuseName) {
         Stage stage = new Stage();
         VBox main = new VBox();
 
@@ -304,7 +300,7 @@ public class Controller {
     }
 
 
-    public static void displayAlert(String message) {
+    private static void displayAlert(String message) {
         Stage stage = new Stage();
         VBox main = new VBox();
 
