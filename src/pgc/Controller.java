@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Objects;
 
 public class Controller {
     public TextField limitField;
@@ -29,6 +30,8 @@ public class Controller {
     public CheckBox prettyExponentBox;
 
     private boolean prettyExponents;
+
+    private static final String lineSeparator = Objects.equals(File.separator, "\\") ? "\r\n" : "\n";
 
     private static boolean displayPrompt(String message, String confirmName, String refuseName) {
         Stage stage = new Stage();
@@ -187,7 +190,7 @@ public class Controller {
 
             closeButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event1 -> {
                 nstage.close();
-                performSave(main, area.getText(), excelButton.isSelected() ?
+                performSave(main, area.getText().replace("\n", lineSeparator), excelButton.isSelected() ?
                                                   SaveType.EXCEL_TYPE :
                                                   SaveType.TEXT_TYPE,
                   includeBox.isSelected(),
@@ -209,7 +212,7 @@ public class Controller {
             totalString = totalString.replace("E", " * (10^") + ")";
         }
 
-        area.appendText("\nTotal: " + totalString);
+        area.appendText(lineSeparator + "Total: " + totalString);
         String fontFamily = Font.getFamilies().contains("SF Mono") ?
                             "SF Mono Medium" :
                             "Courier New Bold";
@@ -274,7 +277,7 @@ public class Controller {
                 result.add(stringValue);
             }
         }
-        return new Pair<>(total, String.join("\n", result));
+        return new Pair<>(total, String.join(lineSeparator, result));
     }
 
     private void performSave(Window usingWindow, String usingText, SaveType type) {
@@ -309,6 +312,7 @@ public class Controller {
         switch (type) {
             case TEXT_TYPE:
                 FileChooser fc = new FileChooser();
+                fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
                 fc.setInitialFileName("untitled.txt");
                 File saveFile = fc.showSaveDialog(usingWindow);
                 if (saveFile == null) {
@@ -322,7 +326,7 @@ public class Controller {
 
                     if (saveFile.exists()) {
                         boolean doOverwrite = displayPrompt(
-                          "The file " + saveFile.getName() + " already exists\n" +
+                          "The file " + saveFile.getName() + " already exists" + lineSeparator +
                             "Do you want to overwrite it?", "Yes", "No");
 
                         if (!doOverwrite) {
@@ -334,10 +338,10 @@ public class Controller {
                       new FileWriter(saveFile));
                     if (withParameters) {
                         br.write("Limit: " + limit);
-                        br.write("\nSteps: " + steps);
-                        br.write("\nRadius: " + radius);
-                        br.write("\nDensity: " + density);
-                        br.write("\n\n");
+                        br.write(lineSeparator + "Steps: " + steps);
+                        br.write(lineSeparator + "Radius: " + radius);
+                        br.write(lineSeparator + "Density: " + density);
+                        br.write(lineSeparator + lineSeparator);
                     }
                     br.write(usingText);
                     br.close();
@@ -348,7 +352,7 @@ public class Controller {
 
             case EXCEL_TYPE:
                 usingText = usingText.replace("Total: ", "");
-                String[] rawLines = usingText.split("\n");
+                String[] rawLines = usingText.split(lineSeparator);
                 String[] csvLines = new String[rawLines.length];
                 for (int i = 0; i < rawLines.length - 1; i++) {
                     csvLines[i] = "\"" + rawLines[i] + "\"" + ",";
@@ -368,7 +372,7 @@ public class Controller {
 
                     if (saveFile.exists()) {
                         boolean doOverwrite = displayPrompt(
-                          "The file " + saveFile.getName() + " already exists\n" +
+                          "The file " + saveFile.getName() + " already exists" + lineSeparator +
                             "Do you want to overwrite it?", "Yes", "No");
 
                         if (!doOverwrite) {
@@ -380,13 +384,13 @@ public class Controller {
                       new FileWriter(saveFile));
                     if (withParameters) {
                         br.write("Limit," + limit);
-                        br.write("\nSteps," + steps);
-                        br.write("\nRadius," + radius);
-                        br.write("\nDensity," + density);
-                        br.write("\n,,\n");
+                        br.write(lineSeparator + "Steps," + steps);
+                        br.write(lineSeparator + "Radius," + radius);
+                        br.write(lineSeparator + "Density," + density);
+                        br.write(lineSeparator + ",," + lineSeparator);
                     }
                     for (int i = 0; i < csvLines.length - 1; i++) {
-                        br.write(csvLines[i] + "\n");
+                        br.write(csvLines[i] + lineSeparator);
                     }
                     br.write("Total," + rawLines[rawLines.length - 1]);
                     br.close();
@@ -415,27 +419,27 @@ public class Controller {
         Label l = new Label("Limit:");
         main.add(l, 0, 0);
 
-        Label limitDescription = new Label("The limit is the limit of the \n" +
-          "number of sections to divide the star into. For example\n" +
-          "if you set it to the default of 45 the star would be divided \n" +
-          "into 45 regions and the pressure gradient will be calculated\n" +
+        Label limitDescription = new Label("The limit is the limit of the " + lineSeparator +
+          "number of sections to divide the star into. For example" + lineSeparator +
+          "if you set it to the default of 45 the star would be divided " + lineSeparator +
+          "into 45 regions and the pressure gradient will be calculated" + lineSeparator +
           "over 45 separate regions yielding 45 values");
         main.add(limitDescription, 1, 0);
 
         Label r = new Label("Start Radius:");
         Label radiusDescription = new Label(
-          "The radius is the starting radius\n" +
-            "of the first of the sections of the star. By default it is 23 million\n" +
-            "meters so the first section's pressure is calculated at 23 million \n" +
-            "meters. Every iteration adds <steps> to the radius until it gets to the\n" +
-            "end of the sun. In other words the entire radius of the star \n" +
+          "The radius is the starting radius" + lineSeparator +
+            "of the first of the sections of the star. By default it is 23 million" + lineSeparator +
+            "meters so the first section's pressure is calculated at 23 million " + lineSeparator +
+            "meters. Every iteration adds <steps> to the radius until it gets to the" + lineSeparator +
+            "end of the sun. In other words the entire radius of the star " + lineSeparator +
             "should be equal to (limit * steps) + radius. The radius is in meters");
 
         main.add(r, 0, 1);
         main.add(radiusDescription, 1, 1);
 
         Label d = new Label("Density:");
-        Label densityDescription = new Label("The average density over the \n" +
+        Label densityDescription = new Label("The average density over the " + lineSeparator +
           "convective zone of the star in grams per cubic centimeter.");
 
         main.add(d, 0, 2);
@@ -443,13 +447,13 @@ public class Controller {
 
         Label s = new Label("Steps:");
         Label stepsDescription = new Label(
-          "The steps number is a number in meters\n" +
-            "Every step this number will be added to the radius and the pressure will\n" +
-            "be calculated at that section of the sun. This number is added to the \n" +
-            "start radius once an iteration for <limit> iterations. In other words\n" +
-            "The pressure is caculated at radius <start radius> then <steps> is \n" +
-            "added to the <start radius> and the pressure is calculated again\n" +
-            "Then this repeats <limit> times and all results plus a total are output\n" +
+          "The steps number is a number in meters" + lineSeparator +
+            "Every step this number will be added to the radius and the pressure will" + lineSeparator +
+            "be calculated at that section of the sun. This number is added to the " + lineSeparator +
+            "start radius once an iteration for <limit> iterations. In other words" + lineSeparator +
+            "The pressure is caculated at radius <start radius> then <steps> is " + lineSeparator +
+            "added to the <start radius> and the pressure is calculated again" + lineSeparator +
+            "Then this repeats <limit> times and all results plus a total are output" + lineSeparator +
             "to the screen.");
 
         main.add(s, 0, 3);
@@ -459,7 +463,7 @@ public class Controller {
         main.add(note, 0, 4);
 
         Label comma = new Label(
-          "You may use commas in numbers. Only density allows\n" +
+          "You may use commas in numbers. Only density allows" + lineSeparator +
             "precision beyond the decimal point. The rest are integers");
 
         main.add(comma, 1, 4);
