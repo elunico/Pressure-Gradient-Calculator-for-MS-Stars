@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="annotations" level="application" />
+    <orderEntry type="library" name="TomUtils" level="application" />
   </component>
 </module>

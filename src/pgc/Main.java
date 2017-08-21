@@ -1,23 +1,20 @@
 package pgc;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import tom.utils.javafx.JavaFXUtilsKt;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("calculator_root.fxml"));
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        Pane p = fxmlLoader.load(getClass().getResource("calculator_root.fxml")
-                                           .openStream());
-        Controller controller = fxmlLoader.getController();
+        Parent root = JavaFXUtilsKt.getRoot(this, "calculator_root.fxml");
+
+        Controller controller = (Controller) JavaFXUtilsKt.getControllerForFile(this, "calculator_root.fxml");
         primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 controller.goAction(null);
