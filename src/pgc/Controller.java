@@ -5,6 +5,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -14,6 +16,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Pair;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -83,7 +86,7 @@ public class Controller {
         stage.show();
     }
 
-    public void goAction(ActionEvent actionEvent) {
+    public void goAction(@Nullable ActionEvent actionEvent) {
         prettyExponents = prettyExponentBox.isSelected();
         String limits = limitField.getText();
         String radiuss = radiusField.getText();
@@ -153,6 +156,11 @@ public class Controller {
 
         Stage main = new Stage();
         main.setTitle("Results");
+        main.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            if (e.getCode() == KeyCode.ESCAPE || e.getCode() == KeyCode.ENTER) {
+                main.close();
+            }
+        });
         VBox pane = new VBox();
         pane.setPadding(new Insets(5));
         pane.setAlignment(Pos.CENTER);
@@ -405,11 +413,16 @@ public class Controller {
         }
     }
 
-    public void helpAction(ActionEvent actionEvent) {
+    public void helpAction(@Nullable ActionEvent actionEvent) {
         Stage stage = new Stage();
         GridPane main = new GridPane();
 
         stage.setTitle("Help");
+        stage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            if (e.getCode() == KeyCode.ESCAPE || e.getCode() == KeyCode.F1) {
+                stage.close();
+            }
+        });
 
         main.setAlignment(Pos.TOP_LEFT);
         main.setHgap(10);
