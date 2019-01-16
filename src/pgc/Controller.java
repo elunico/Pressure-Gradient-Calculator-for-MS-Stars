@@ -278,13 +278,16 @@ public class Controller {
       InputData.Parameters parameters
   ) {
     String extension;
-    if (type == SaveType.TEXT_TYPE) {
-      extension = ".txt";
-    } else if (type == SaveType.EXCEL_TYPE) {
-      extension = ".csv";
-      usingText = formatTextForCSV(usingText);
-    } else {
-      throw new RuntimeException("Unexpected SaveType value for enum");
+    switch (type) {
+      case TEXT_TYPE:
+        extension = ".txt";
+        break;
+      case EXCEL_TYPE:
+        extension = ".csv";
+        usingText = formatTextForCSV(usingText);
+        break;
+      default:
+        throw new RuntimeException("Unexpected SaveType value for enum");
     }
 
     File saveFile = promptForSaveFile(usingWindow, extension);
@@ -341,7 +344,7 @@ public class Controller {
   }
 
   public void helpAction() {
-    new HelpDialog();
+    HelpDialog.showHelpDialog();
   }
 
   private enum SaveType {EXCEL_TYPE, TEXT_TYPE}
