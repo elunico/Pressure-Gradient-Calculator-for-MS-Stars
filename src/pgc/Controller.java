@@ -1,6 +1,5 @@
 package pgc;
 
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -8,7 +7,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -16,480 +14,335 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Pair;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Objects;
+import java.util.ArrayList;
 
 public class Controller {
-    public TextField limitField;
-    public TextField radiusField;
-    public TextField densityField;
-    public TextField stepsField;
-    public CheckBox prettyExponentBox;
+  static final String lineSeparator = System.lineSeparator();
 
-    private boolean prettyExponents;
+  private static boolean displayPrompt(
+      @NotNull String message,
+      @NotNull String confirmName,
+      @NotNull String refuseName
+  ) {
+    Stage stage = new Stage();
+    VBox main = new VBox();
 
-    private static final String lineSeparator = Objects.equals(File.separator, "\\") ? "\r\n" : "\n";
+    main.setPadding(new Insets(5));
+    main.setSpacing(5);
 
-    private static boolean displayPrompt(String message, String confirmName, String refuseName) {
-        Stage stage = new Stage();
-        VBox main = new VBox();
+    main.getChildren().add(new Label(message));
 
-        main.setPadding(new Insets(5));
-        main.setSpacing(5);
+    Button confirmButton = new Button(confirmName);
+    Button refuseButton = new Button(refuseName);
+    final boolean[] result = new boolean[1];
 
-        main.getChildren().add(new Label(message));
+    confirmButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+      stage.close();
+      result[0] = true;
+    });
 
-        Button confirmButton = new Button(confirmName);
-        Button refuseButton = new Button(refuseName);
-        final boolean[] result = new boolean[1];
+    refuseButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+      stage.close();
+      result[0] = false;
+    });
 
-        confirmButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            stage.close();
-            result[0] = true;
-        });
+    main.getChildren().addAll(confirmButton, refuseButton);
 
-        refuseButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            stage.close();
-            result[0] = false;
-        });
+    stage.setScene(new Scene(main));
+    stage.show();
 
-        main.getChildren().addAll(confirmButton, refuseButton);
+    return result[0];
+  }
 
-        stage.setScene(new Scene(main));
-        stage.show();
+  public TextField limitField;
+  public TextField radiusField;
+  public TextField densityField;
+  public TextField stepsField;
+  public CheckBox prettyExponentBox;
+  private boolean prettyExponents;
 
-        return result[0];
+  public void goAction() {
+    prettyExponents = prettyExponentBox.isSelected();
+
+    InputData data = new InputData(limitField.getText(), radiusField.getText(),
+                                   densityField.getText(), stepsField.getText());
+    InputData.Parameters parameters = data.parse();
+    if (parameters == null) {
+      return;
     }
-
-    private static void displayAlert(String message) {
-        Stage stage = new Stage();
-        VBox main = new VBox();
-
-        main.setPadding(new Insets(5));
-        main.setSpacing(5);
-
-        main.getChildren().add(new Label(message));
-
-        Button okButton = new Button("Dismiss");
-
-        okButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
-          event -> stage.close());
-        main.getChildren().add(okButton);
-
-        stage.setScene(new Scene(main));
-        stage.show();
+    try {
+      Pair<Double, String> res = calculateMainSequence(parameters);
+      showResultsStage(parameters, res);
+    } catch (ArithmeticException e) {
+      displayAlert(e.getMessage());
     }
+  }
 
-    public void goAction(@Nullable ActionEvent actionEvent) {
-        prettyExponents = prettyExponentBox.isSelected();
-        String limits = limitField.getText();
-        String radiuss = radiusField.getText();
-        String densitys = densityField.getText();
-        String stepss = stepsField.getText();
-
-        int limit;
-        long steps, radius;
-        double density;
-
-        if (limits.equals("")) {
-            limit = 45;
-        } else {
-            limits = limits.replace(",", "");
-            try {
-                limit = Integer.parseInt(limits);
-            } catch (NumberFormatException e) {
-                displayAlert("Please enter a valid integer for limit");
-                return;
-            }
-        }
-
-        if (radiuss.equals("")) {
-            radius = 23193333;
-        } else {
-            radiuss = radiuss.replace(",", "");
-            try {
-                radius = Long.parseLong(radiuss);
-            } catch (NumberFormatException e) {
-                displayAlert("Please enter a valid long integer for radius");
-                return;
-            }
-        }
-
-        if (stepss.equals("")) {
-            steps = 45000000;
-        } else {
-            stepss = stepss.replace(",", "");
-            try {
-                steps = Long.parseLong(stepss);
-            } catch (NumberFormatException e) {
-                displayAlert("Please enter a valid long integer for steps");
-                return;
-            }
-        }
-
-        if (densitys.equals("")) {
-            density = 4.5;
-        } else {
-            try {
-                density = Double.parseDouble(densitys);
-            } catch (NumberFormatException e) {
-                displayAlert(
-                  "Please enter a valid double precision floating point number for density");
-                return;
-            }
-        }
-
-        Pair<Double, String> res;
-        try {
-            res = calculateMainSequence(limit, radius,
-              steps, density);
-        } catch (ArithmeticException e) {
-            displayAlert(e.getMessage());
-            return;
-        }
-
-        Stage main = new Stage();
-        main.setTitle("Results");
-        main.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            if (e.getCode() == KeyCode.ESCAPE || e.getCode() == KeyCode.ENTER) {
-                main.close();
-            }
-        });
-        VBox pane = new VBox();
-        pane.setPadding(new Insets(5));
-        pane.setAlignment(Pos.CENTER);
-        pane.setSpacing(5);
-
-
-        TextArea area = new TextArea();
-        area.setPrefRowCount(30);
-        area.setEditable(false);
-        Button saveButton = new Button("Save as");
-        Button closeButton = new Button("Close");
-
-        saveButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-
-            Stage nstage = new Stage();
-            nstage.setTitle("Save Options");
-            VBox mainpane = new VBox();
-            mainpane.setSpacing(10);
-            mainpane.setPadding(new Insets(10));
-
-            Label label = new Label("Save Options");
-            label.setFont(new Font("Arial Bold", 14));
-
-            CheckBox includeBox = new CheckBox("Include Initial Parameters?");
-
-            RadioButton textButton = new RadioButton("Plain Text Format");
-            RadioButton excelButton = new RadioButton("Excel Format");
-
-            ToggleGroup toggleGroup = new ToggleGroup();
-            textButton.setSelected(true);
-            textButton.setToggleGroup(toggleGroup);
-            excelButton.setToggleGroup(toggleGroup);
-
-            Button closeButton1 = new Button("Go");
-
-            closeButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event1 -> {
-                nstage.close();
-                performSave(main, area.getText().replace("\n", lineSeparator), excelButton.isSelected() ?
-                                                  SaveType.EXCEL_TYPE :
-                                                  SaveType.TEXT_TYPE,
-                  includeBox.isSelected(),
-                  limit, steps, radius, density);
-            });
-
-            mainpane.getChildren().addAll(label, includeBox, textButton,
-              excelButton, closeButton1);
-
-            nstage.setScene(new Scene(mainpane));
-            nstage.show();
-        });
-
-
-        area.setText(res.getValue());
-
-        String totalString = String.valueOf(res.getKey());
-        if (totalString.contains("E") && prettyExponents) {
-            totalString = totalString.replace("E", " * (10^") + ")";
-        }
-
-        area.appendText(lineSeparator + "Total: " + totalString);
-        String fontFamily = Font.getFamilies().contains("SF Mono") ?
-                            "SF Mono Medium" :
-                            "Courier New Bold";
-        int fontSize = fontFamily.equals("SF Mono Medium") ? 12 : 13;
-        area.setFont(new Font(fontFamily, fontSize));
-        closeButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
-          event -> main.close());
-
-        HBox buttons = new HBox();
-        buttons.setAlignment(Pos.CENTER);
-        buttons.setPadding(new Insets(5));
-        buttons.setSpacing(5);
-        buttons.getChildren().addAll(saveButton, closeButton);
-
-        pane.getChildren().addAll(area, buttons);
-
-        main.setScene(new Scene(pane));
-        main.show();
-
-    }
-
-    /**
-     * Uses a predetermined formula to calculate a list of pressures along a
-     * gradient of a main sequence star given the certain parameters of the star.
-     *
-     * @param limit   the number of total sections to divide the star into
-     * @param radius  the radius of the star
-     * @param steps   the number of steps to go through
-     * @param density the density of the star in g/cm^3
-     * @return a pair containing the total as a Double and a String containing
-     * all the double values of each step separated by a new line
-     * @throws ArithmeticException if the number of steps is high enough to overflow
-     *                             {@link Double}
-     */
-    private Pair<Double, String> calculateMainSequence(int limit, long radius,
-                                                       long steps, double density)
+  /**
+   * Uses a predetermined formula to calculate a list of pressures along a
+   * gradient of a main sequence star given the certain parameters of the star.
+   *
+   * @param parameters contains the params for calculating the function value
+   *                   limit   the number of total sections to divide the star into
+   *                   radius  the radius of the star
+   *                   steps   the number of steps to go through
+   *                   density the density of the star in g/cm^3
+   * @return a pair containing the total as a Double and a String containing
+   * all the double values of each step separated by a new line
+   * @throws ArithmeticException if the number of steps is high enough to overflow
+   *                             {@link Double}
+   */
+  @NotNull
+  private Pair<Double, String> calculateMainSequence(@NotNull InputData.Parameters parameters)
       throws ArithmeticException {
-        int basemass = 10;
-        int exponent = 1;
-        double total = 0;
-        LinkedList<Double> pressures = new LinkedList<>();
-        while (exponent <= limit) {
-            double pressure = (((6.6738 * (Math.pow(10, -11))) * (Math.pow(
-              basemass, exponent))) / ((radius << 1))) * density;
-            if (Double.isInfinite(pressure)) {
-                throw new ArithmeticException(
-                  "Too many sections given. Overflow!");
-            }
-            pressures.add(pressure);
-            total += pressure;
-            exponent += 1;
-            radius += steps;
-        }
 
-        LinkedList<String> result = new LinkedList<>();
+    int limit = parameters.getLimit();
+    long steps = parameters.getSteps();
+    long radius = parameters.getRadius();
+    double density = parameters.getDensity();
 
-        for (Double number : pressures) {
-            String stringValue = String.valueOf(number);
-            if (stringValue.contains("E") && prettyExponents) {
-                result.add(stringValue.replace("E", " * (10^") + ")");
-            } else {
-                result.add(stringValue);
-            }
-        }
-        return new Pair<>(total, String.join(lineSeparator, result));
+    int basemass = 10;
+    int exponent = 1;
+    double total = 0;
+
+    ArrayList<Double> pressures = new ArrayList<>(limit - exponent);
+    while (exponent <= limit) {
+      double pressure = (((6.6738 * (Math.pow(10, -11))) * (Math.pow(
+          basemass, exponent))) / ((radius << 1))) * density;
+      if (Double.isInfinite(pressure)) {
+        throw new ArithmeticException("Too many sections given. Overflow!");
+      }
+      pressures.add(pressure);
+      total += pressure;
+      exponent += 1;
+      radius += steps;
     }
 
-    private void performSave(Window usingWindow, String usingText, SaveType type) {
-        // when withParameters (arg 4) is false, the subsequent arguments are ignored
-        performSave(usingWindow, usingText, type, false, 0, 0, 0, 0);
+    ArrayList<String> result = new ArrayList<>(pressures.size());
+
+    for (Double number : pressures) {
+      String stringValue = String.valueOf(number);
+      if (stringValue.contains("E") && prettyExponents) {
+        result.add(stringValue.replace("E", " * (10^") + ")");
+      } else {
+        result.add(stringValue);
+      }
+    }
+    return new Pair<>(total, String.join(lineSeparator, result));
+  }
+
+  private void showResultsStage(
+      @NotNull final InputData.Parameters parameters,
+      @NotNull final Pair<Double, String> res
+  ) {
+
+    Stage main = new Stage();
+    main.setTitle("Results");
+    main.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+      if (e.getCode() == KeyCode.ESCAPE ||
+          e.getCode() == KeyCode.ENTER)
+      {
+        main.close();
+      }
+    });
+
+    VBox pane = new VBox();
+    pane.setPadding(new Insets(5));
+    pane.setAlignment(Pos.CENTER);
+    pane.setSpacing(5);
+
+    TextArea area = new TextArea();
+    area.setPrefRowCount(30);
+    area.setEditable(false);
+    area.setText(res.getValue());
+    area.setFont(getFontForArea());
+
+    Button saveButton = new Button("Save as");
+    Button closeButton = new Button("Close");
+
+    saveButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> showSaveStageAction(parameters, main, area));
+    closeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> main.close());
+
+    String totalString = String.valueOf(res.getKey());
+    if (totalString.contains("E") && prettyExponents) {
+      totalString = totalString.replace("E", " * (10^") + ")";
     }
 
-    private void performSave(String usingText, SaveType type) {
-        performSave(null, usingText, type);
+    area.appendText(lineSeparator + "Total: " + totalString);
+
+    HBox buttons = new HBox();
+    buttons.setAlignment(Pos.CENTER);
+    buttons.setPadding(new Insets(5));
+    buttons.setSpacing(5);
+    buttons.getChildren().addAll(saveButton, closeButton);
+
+    pane.getChildren().addAll(area, buttons);
+
+    main.setScene(new Scene(pane));
+    main.show();
+  }
+
+  static void displayAlert(@NotNull String message) {
+    Stage stage = new Stage();
+    VBox main = new VBox();
+
+    main.setPadding(new Insets(5));
+    main.setSpacing(5);
+
+    main.getChildren().add(new Label(message));
+
+    Button okButton = new Button("Dismiss");
+
+    okButton.addEventHandler(
+        MouseEvent.MOUSE_CLICKED,
+        event -> stage.close()
+    );
+    main.getChildren().add(okButton);
+
+    stage.setScene(new Scene(main));
+    stage.show();
+  }
+
+  @NotNull
+  private static Font getFontForArea() {
+    String fontFamily = Font.getFamilies().contains("SF Mono") ? "SF Mono Medium" : "Courier New Bold";
+    int fontSize = fontFamily.equals("SF Mono Medium") ? 12 : 13;
+    return new Font(fontFamily, fontSize);
+  }
+
+  private void showSaveStageAction(final @NotNull InputData.Parameters parameters, final Stage main, final TextArea area) {
+    Stage nstage = new Stage();
+    nstage.setTitle("Save Options");
+
+    VBox mainpane = new VBox();
+    mainpane.setSpacing(10);
+    mainpane.setPadding(new Insets(10));
+
+    Label label = new Label("Save Options");
+    label.setFont(new Font("Arial Bold", 14));
+
+    CheckBox includeBox = new CheckBox("Include Initial Parameters?");
+
+    ToggleGroup toggleGroup = new ToggleGroup();
+
+    RadioButton textButton = new RadioButton("Plain Text Format");
+    textButton.setSelected(true);
+    textButton.setToggleGroup(toggleGroup);
+
+    RadioButton excelButton = new RadioButton("Excel Format");
+    excelButton.setToggleGroup(toggleGroup);
+
+    Button closeButton1 = new Button("Go");
+
+    closeButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event1 -> {
+      nstage.close();
+      performSave(main, area.getText().replace("\n", lineSeparator),
+                  excelButton.isSelected() ? SaveType.EXCEL_TYPE : SaveType.TEXT_TYPE,
+                  includeBox.isSelected(), parameters
+      );
+    });
+
+    mainpane.getChildren().addAll(label, includeBox, textButton,
+                                  excelButton, closeButton1);
+
+    nstage.setScene(new Scene(mainpane));
+    nstage.show();
+  }
+
+  /**
+   * Writes an appropriate file (decided by SaveType type parameter) using the
+   * results of the pressure gradient calculation. The last 4 parameters are passed
+   * as the initial conditions of the calculation and can optionally be saved.
+   * They will be ignored if {@code withParameters} is false and written otherwise
+   * If {@code withParameters} is false, these values can be 0'd out
+   *
+   * @param usingWindow    The root window which will display the {@link FileChooser} pane
+   * @param usingText      The text output to be used in the file, generated by
+   *                       {@link #calculateMainSequence(InputData.Parameters)}
+   * @param type           Used to determine if the file output is a {@code .txt} or {@code .csv} file
+   * @param withParameters if true, initial conditions of the calculation will be written to the file as well
+   * @param parameters     the parameters used to calculated the function value ignored if {@code withParameters} is false
+   */
+  private void performSave(
+      Window usingWindow,
+      @NotNull String usingText,
+      SaveType type,
+      boolean withParameters,
+      InputData.Parameters parameters
+  ) {
+    String extension;
+    if (type == SaveType.TEXT_TYPE) {
+      extension = ".txt";
+    } else if (type == SaveType.EXCEL_TYPE) {
+      extension = ".csv";
+      usingText = formatTextForCSV(usingText);
+    } else {
+      throw new RuntimeException("Unexpected SaveType value for enum");
     }
 
-    /**
-     * Writes an appropriate file (decided by SaveType type parameter) using the
-     * results of the pressure gradient calculation. The last 4 parameters are passed
-     * as the initial conditions of the calculation and can optionally be saved.
-     * They will be ignored if {@code withParameters} is false and written otherwise
-     * If {@code withParameters} is false, these values can be 0'd out
-     *
-     * @param usingWindow    The root window which will display the {@link FileChooser} pane
-     * @param usingText      The text output to be used in the file, generated by
-     *                       {@link #calculateMainSequence(int, long, long, double)}
-     * @param type           Used to determine if the file output is a {@code .txt} or {@code .csv} file
-     * @param withParameters if true, initial conditions of the calculation will be written to the file as well
-     * @param limit          the initial condition limit variable, ignored if {@code withParameters} is false
-     * @param steps          the initial condition steps variable, ignored if {@code withParameters} is false
-     * @param radius         the initial condition radius variable, ignored if {@code withParameters} is false
-     * @param density        the initial condition density variable, ignored if {@code withParameters} is false
-     */
-    private void performSave(Window usingWindow, String usingText, SaveType type,
-                             boolean withParameters, int limit, long steps,
-                             long radius, double density) {
-        switch (type) {
-            case TEXT_TYPE:
-                FileChooser fc = new FileChooser();
-                fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
-                fc.setInitialFileName("untitled.txt");
-                File saveFile = fc.showSaveDialog(usingWindow);
-                if (saveFile == null) {
-                    return;
-                }
-                try {
-                    if (!saveFile.getName().contains(".txt")) {
-                        saveFile = new File(
-                          saveFile.getAbsolutePath() + ".txt");
-                    }
-
-                    if (saveFile.exists()) {
-                        boolean doOverwrite = displayPrompt(
-                          "The file " + saveFile.getName() + " already exists" + lineSeparator +
-                            "Do you want to overwrite it?", "Yes", "No");
-
-                        if (!doOverwrite) {
-                            return;
-                        }
-                    }
-
-                    BufferedWriter br = new BufferedWriter(
-                      new FileWriter(saveFile));
-                    if (withParameters) {
-                        br.write("Limit: " + limit);
-                        br.write(lineSeparator + "Steps: " + steps);
-                        br.write(lineSeparator + "Radius: " + radius);
-                        br.write(lineSeparator + "Density: " + density);
-                        br.write(lineSeparator + lineSeparator);
-                    }
-                    br.write(usingText);
-                    br.close();
-                } catch (IOException e) {
-                    displayAlert("File does not exist. Save failed!");
-                }
-                break;
-
-            case EXCEL_TYPE:
-                usingText = usingText.replace("Total: ", "");
-                String[] rawLines = usingText.split(lineSeparator);
-                String[] csvLines = new String[rawLines.length];
-                for (int i = 0; i < rawLines.length - 1; i++) {
-                    csvLines[i] = "\"" + rawLines[i] + "\"" + ",";
-                }
-
-                fc = new FileChooser();
-                fc.setInitialFileName("untitled.csv");
-                saveFile = fc.showSaveDialog(usingWindow);
-                if (saveFile == null) {
-                    return;
-                }
-                try {
-                    if (!saveFile.getName().contains(".csv")) {
-                        saveFile = new File(
-                          saveFile.getAbsolutePath() + ".csv");
-                    }
-
-                    if (saveFile.exists()) {
-                        boolean doOverwrite = displayPrompt(
-                          "The file " + saveFile.getName() + " already exists" + lineSeparator +
-                            "Do you want to overwrite it?", "Yes", "No");
-
-                        if (!doOverwrite) {
-                            return;
-                        }
-                    }
-
-                    BufferedWriter br = new BufferedWriter(
-                      new FileWriter(saveFile));
-                    if (withParameters) {
-                        br.write("Limit," + limit);
-                        br.write(lineSeparator + "Steps," + steps);
-                        br.write(lineSeparator + "Radius," + radius);
-                        br.write(lineSeparator + "Density," + density);
-                        br.write(lineSeparator + ",," + lineSeparator);
-                    }
-                    for (int i = 0; i < csvLines.length - 1; i++) {
-                        br.write(csvLines[i] + lineSeparator);
-                    }
-                    br.write("Total," + rawLines[rawLines.length - 1]);
-                    br.close();
-                } catch (IOException e) {
-                    displayAlert("File does not exist. Save failed!");
-                }
-                break;
-
-            default:
-                throw new RuntimeException(
-                  "Unexpected or unknown enum value in switch statement");
-        }
+    File saveFile = promptForSaveFile(usingWindow, extension);
+    if (saveFile == null) {
+      return;
     }
 
-    public void helpAction(@Nullable ActionEvent actionEvent) {
-        Stage stage = new Stage();
-        GridPane main = new GridPane();
-
-        stage.setTitle("Help");
-        stage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            if (e.getCode() == KeyCode.ESCAPE || e.getCode() == KeyCode.F1) {
-                stage.close();
-            }
-        });
-
-        main.setAlignment(Pos.TOP_LEFT);
-        main.setHgap(10);
-        main.setVgap(10);
-        main.setPadding(new Insets(10));
-
-        Label l = new Label("Limit:");
-        main.add(l, 0, 0);
-
-        Label limitDescription = new Label("The limit is the limit of the " + lineSeparator +
-          "number of sections to divide the star into. For example" + lineSeparator +
-          "if you set it to the default of 45 the star would be divided " + lineSeparator +
-          "into 45 regions and the pressure gradient will be calculated" + lineSeparator +
-          "over 45 separate regions yielding 45 values");
-        main.add(limitDescription, 1, 0);
-
-        Label r = new Label("Start Radius:");
-        Label radiusDescription = new Label(
-          "The radius is the starting radius" + lineSeparator +
-            "of the first of the sections of the star. By default it is 23 million" + lineSeparator +
-            "meters so the first section's pressure is calculated at 23 million " + lineSeparator +
-            "meters. Every iteration adds <steps> to the radius until it gets to the" + lineSeparator +
-            "end of the sun. In other words the entire radius of the star " + lineSeparator +
-            "should be equal to (limit * steps) + radius. The radius is in meters");
-
-        main.add(r, 0, 1);
-        main.add(radiusDescription, 1, 1);
-
-        Label d = new Label("Density:");
-        Label densityDescription = new Label("The average density over the " + lineSeparator +
-          "convective zone of the star in grams per cubic centimeter.");
-
-        main.add(d, 0, 2);
-        main.add(densityDescription, 1, 2);
-
-        Label s = new Label("Steps:");
-        Label stepsDescription = new Label(
-          "The steps number is a number in meters" + lineSeparator +
-            "Every step this number will be added to the radius and the pressure will" + lineSeparator +
-            "be calculated at that section of the sun. This number is added to the " + lineSeparator +
-            "start radius once an iteration for <limit> iterations. In other words" + lineSeparator +
-            "The pressure is caculated at radius <start radius> then <steps> is " + lineSeparator +
-            "added to the <start radius> and the pressure is calculated again" + lineSeparator +
-            "Then this repeats <limit> times and all results plus a total are output" + lineSeparator +
-            "to the screen.");
-
-        main.add(s, 0, 3);
-        main.add(stepsDescription, 1, 3);
-
-        Label note = new Label("Note:");
-        main.add(note, 0, 4);
-
-        Label comma = new Label(
-          "You may use commas in numbers. Only density allows" + lineSeparator +
-            "precision beyond the decimal point. The rest are integers");
-
-        main.add(comma, 1, 4);
-
-        Button closeButton = new Button("Close");
-        closeButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
-          event -> stage.close());
-
-        main.add(closeButton, 1, 5);
-
-        stage.setScene(new Scene(main));
-        stage.show();
+    try {
+      BufferedWriter br = new BufferedWriter(new FileWriter(saveFile));
+      if (withParameters) {
+        writeParameters(br, parameters);
+      }
+      br.write(usingText);
+      br.close();
+    } catch (IOException e) {
+      displayAlert("File could not be saved" + lineSeparator + e.getMessage());
     }
+  }
 
-    private enum SaveType {EXCEL_TYPE, TEXT_TYPE}
+  @NotNull
+  private static String formatTextForCSV(@NotNull String usingText) {
+    usingText = usingText.replace("Total: ", "");
+    String[] rawLines = usingText.split(lineSeparator);
+    String[] csvLines = new String[rawLines.length - 1];
+    for (int i = 0; i < rawLines.length - 1; i++) {
+      csvLines[i] = "\"" + rawLines[i] + "\"" + ",";
+    }
+    usingText = String.join(lineSeparator, csvLines);
+    usingText += lineSeparator + "Total," + rawLines[rawLines.length - 1];
+    return usingText;
+  }
+
+  @Nullable
+  private File promptForSaveFile(@Nullable final Window usingWindow, @NotNull final String extension) {
+    FileChooser fc = new FileChooser();
+    fc.getExtensionFilters().add(new FileChooser.ExtensionFilter(extension.toUpperCase() + " files", "*" + extension));
+    fc.setInitialFileName("untitled" + extension);
+    File saveFile = fc.showSaveDialog(usingWindow);
+    if (saveFile == null) {
+      return null;
+    }
+    if (!saveFile.getName().contains(extension)) {
+      saveFile = new File(saveFile.getAbsolutePath() + extension);
+    }
+    return saveFile;
+  }
+
+  private void writeParameters(final BufferedWriter br, final InputData.Parameters parameters) throws IOException {
+    br.write("Sections: " + parameters.getLimit());
+    br.write(lineSeparator + "Steps: " + parameters.getSteps());
+    br.write(lineSeparator + "Radius: " + parameters.getRadius());
+    br.write(lineSeparator + "Density: " + parameters.getDensity());
+    br.write(lineSeparator + ",," + lineSeparator);
+  }
+
+  public void helpAction() {
+    new HelpDialog();
+  }
+
+  private enum SaveType {EXCEL_TYPE, TEXT_TYPE}
 }

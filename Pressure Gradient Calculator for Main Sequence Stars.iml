@@ -7,7 +7,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="annotations" level="application" />
-    <orderEntry type="library" name="TomUtils" level="application" />
+    <orderEntry type="library" exported="" name="annotations" level="application" />
+    <orderEntry type="library" exported="" name="TomUtils" level="project" />
+    <orderEntry type="library" name="com.github.salomonbrys.kotson:kotson:2.5.0" level="application" />
   </component>
 </module>

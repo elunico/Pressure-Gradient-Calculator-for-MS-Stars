@@ -1,34 +1,38 @@
 package pgc;
 
 import javafx.application.Application;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 import tom.utils.javafx.JavaFXUtilsKt;
 
 public class Main extends Application {
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = JavaFXUtilsKt.getRoot(this, "calculator_root.fxml");
+  public static void main(String[] args) {
+    launch(args);
+  }
 
-        Controller controller = (Controller) JavaFXUtilsKt.getControllerForFile(this, "calculator_root.fxml");
-        primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                controller.goAction(null);
-            } else if (e.getCode() == KeyCode.F1){
-                controller.helpAction(null);
-            }
-        });
-        primaryStage.setTitle("Main Sequence Calculator");
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+  @Override
+  public void start(@NotNull Stage primaryStage) throws Exception {
+    FlowPane root = JavaFXUtilsKt.getRootFromFXML(this, "calculator_root.fxml");
+    Controller controller = JavaFXUtilsKt.getControllerFromFXML(this, "calculator_root.fxml");
+
+    if (root == null || controller == null) {
+      throw new RuntimeException("Could not load FXML file for UI. Application Terminated");
     }
 
-
-    public static void main(String[] args) {
-        launch(args);
-    }
+    primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+      if (e.getCode() == KeyCode.ENTER) {
+        controller.goAction();
+      } else if (e.getCode() == KeyCode.F1) {
+        controller.helpAction();
+      }
+    });
+    primaryStage.setTitle("Main Sequence Calculator");
+    primaryStage.setScene(new Scene(root));
+    primaryStage.show();
+  }
 }
