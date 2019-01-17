@@ -7,14 +7,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pgc/InputData.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pressure Gradient Calculator for Main Sequence Stars.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Pressure Gradient Calculator for Main Sequence Stars.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Pressure Gradient Calculator for Main Sequence Stars/pgc/Controller$SaveType.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Pressure Gradient Calculator for Main Sequence Stars/pgc/Controller$SaveType.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Pressure Gradient Calculator for Main Sequence Stars/pgc/Controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Pressure Gradient Calculator for Main Sequence Stars/pgc/Controller.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Pressure Gradient Calculator for Main Sequence Stars/pgc/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Pressure Gradient Calculator for Main Sequence Stars/pgc/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pgc/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pgc/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pgc/HelpDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pgc/HelpDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pgc/InputData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pgc/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pgc/Main.java" afterDir="false" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -76,8 +76,8 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pgc/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="155">
-              <caret line="19" column="38" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
+            <state>
+              <caret line="18" selection-start-line="18" selection-end-line="18" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -85,11 +85,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Controller.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Controller.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/pgc/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="84">
-              <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+            <state relative-caret-position="273">
+              <caret line="58" column="24" selection-start-line="58" selection-start-column="24" selection-end-line="58" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -97,20 +97,8 @@
       <file leaf-file-name="HelpDialog.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pgc/HelpDialog.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1504">
-              <caret line="20" selection-start-line="20" selection-end-line="20" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StageCloseFactory.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/pgc/StageCloseFactory.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-504">
-              <caret line="16" column="25" selection-start-line="16" selection-start-column="25" selection-end-line="16" selection-end-column="25" />
+            <state relative-caret-position="609">
+              <caret line="38" column="22" selection-start-line="38" selection-start-column="22" selection-end-line="38" selection-end-column="22" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -123,8 +111,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Kotlin File" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -144,8 +132,8 @@
       <find>stage</find>
     </findStrings>
     <replaceStrings>
-      <replace />
-      <replace />
+      <replace>lineSeparator + &quot;</replace>
+      <replace>&quot; + lineSeparator</replace>
       <replace>this</replace>
     </replaceStrings>
   </component>
@@ -167,12 +155,13 @@
         <option value="$PROJECT_DIR$/src/pgc/README" />
         <option value="$PROJECT_DIR$/src/pgc/Test.java" />
         <option value="$PROJECT_DIR$/src/pgc/StageCloseFactory.java" />
-        <option value="$PROJECT_DIR$/src/pgc/Main.java" />
         <option value="$PROJECT_DIR$/src/pgc/InDataK.kt" />
         <option value="$PROJECT_DIR$/src/pgc/InputData.java" />
-        <option value="$PROJECT_DIR$/src/pgc/InputData.kt" />
-        <option value="$PROJECT_DIR$/src/pgc/Controller.java" />
         <option value="$PROJECT_DIR$/src/pgc/HelpDialog.java" />
+        <option value="$PROJECT_DIR$/src/pgc/InputData.kt" />
+        <option value="$PROJECT_DIR$/src/pgc/Main.java" />
+        <option value="$PROJECT_DIR$/test/ControllerTest.java" />
+        <option value="$PROJECT_DIR$/src/pgc/Controller.java" />
       </list>
     </option>
   </component>
@@ -187,9 +176,9 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="716" />
-    <option name="width" value="1213" />
-    <option name="height" value="1039" />
+    <option name="x" value="715" />
+    <option name="width" value="1215" />
+    <option name="height" value="1040" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectReloadState">
@@ -201,9 +190,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -226,73 +212,13 @@
               <item name="Pressure-Gradient-Calculator-for-MS-Stars" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
-            <path>
-              <item name="Pressure-Gradient-Calculator-for-MS-Stars" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; Java 8 &gt;" type="70bed36:NamedLibraryElementNode" />
-            </path>
-            <path>
-              <item name="Pressure-Gradient-Calculator-for-MS-Stars" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; Java 8 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="jfxrt.jar" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Pressure-Gradient-Calculator-for-MS-Stars" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; Java 8 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="jfxrt.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="control" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Pressure-Gradient-Calculator-for-MS-Stars" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; Java 8 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="jfxrt.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="stage" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Pressure-Gradient-Calculator-for-MS-Stars" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; Java 8 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="jfxrt.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="util" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Pressure-Gradient-Calculator-for-MS-Stars" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; Java 8 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Pressure-Gradient-Calculator-for-MS-Stars" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; Java 8 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="reflect" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Pressure-Gradient-Calculator-for-MS-Stars" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="TomUtils" type="70bed36:NamedLibraryElementNode" />
-            </path>
-            <path>
-              <item name="Pressure-Gradient-Calculator-for-MS-Stars" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="TomUtils" type="70bed36:NamedLibraryElementNode" />
-              <item name="TomUtils.jar" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Pressure-Gradient-Calculator-for-MS-Stars" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="TomUtils" type="70bed36:NamedLibraryElementNode" />
-              <item name="TomUtils.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="javafx" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="AndroidView" />
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -352,9 +278,14 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunManager" selected="Application.ControllerTest">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+    </configuration>
+    <configuration name="ControllerTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ControllerTest" />
+      <module name="Pressure Gradient Calculator for Main Sequence Stars" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     </configuration>
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="pgc.Main" />
@@ -947,9 +878,11 @@
     <list>
       <item itemvalue="Application.Main" />
       <item itemvalue="Application.Test" />
+      <item itemvalue="Application.ControllerTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ControllerTest" />
         <item itemvalue="Application.Test" />
       </list>
     </recent_temporary>
@@ -1021,7 +954,9 @@
       <workItem from="1546413890573" duration="273000" />
       <workItem from="1547647266322" duration="6311000" />
       <workItem from="1547657478554" duration="3938000" />
-      <workItem from="1547677180954" duration="695000" />
+      <workItem from="1547677180954" duration="1098000" />
+      <workItem from="1547688673437" duration="9000" />
+      <workItem from="1547735895800" duration="936000" />
     </task>
     <task id="LOCAL-00001" summary="Added keyboard key handlers&#10;&#10;Enter, escape, and F1 now work as you would expect for help and go">
       <created>1503277321817</created>
@@ -1044,11 +979,18 @@
       <option name="project" value="LOCAL" />
       <updated>1547653481565</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="InputData is now Kotlin and HelpDialog is a static method">
+      <created>1547678037346</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1547678037346</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43639000" />
+    <option name="totallyTimeSpent" value="44987000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -1066,15 +1008,17 @@
       <window_info id="UI Designer" order="4" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3993994" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Messages" order="11" weight="0.33242133" />
       <window_info anchor="right" id="Palette&#9;" order="15" />
       <window_info id="Image Layers" order="7" />
       <window_info anchor="right" id="Capture Analysis" order="13" />
       <window_info anchor="bottom" id="Version Control" order="19" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3255814" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3255814" />
       <window_info anchor="bottom" id="Terminal" order="15" />
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.46922025" visible="true" weight="0.19466145" />
       <window_info anchor="bottom" id="Run with VisualVM" order="16" />
       <window_info anchor="bottom" id="JProfiler" order="17" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32930845" />
       <window_info anchor="right" id="SciView" order="16" />
       <window_info anchor="right" id="Theme Preview" order="12" />
       <window_info id="Favorites" order="6" side_tool="true" />
@@ -1084,22 +1028,20 @@
       <window_info anchor="bottom" id="Regex" order="13" />
       <window_info anchor="bottom" id="Changes" order="10" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="right" id="The R Graphics" order="11" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Regex Tester" order="14" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="right" id="JetGradle" order="6" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Problems" order="12" />
       <window_info anchor="bottom" id="Profiler" order="9" />
       <window_info anchor="right" id="LuaJ" order="9" />
       <window_info anchor="right" id="Flutter Inspector" order="14" />
-      <window_info anchor="bottom" id="Messages" order="11" weight="0.33242133" />
       <window_info anchor="bottom" id="Application Servers" order="8" />
       <window_info anchor="right" id="Properties" order="7" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32930845" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Memory View" order="8" />
       <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="right" id="The R Graphics" order="11" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1121,7 +1063,8 @@
     <MESSAGE value="Added keyboard key handlers&#10;&#10;Enter, escape, and F1 now work as you would expect for help and go" />
     <MESSAGE value="Now depends on jetbrains annotations jar and TomUtils" />
     <MESSAGE value="Did a lot of refactoring to clean up code. Switched from 4 space indents to 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="Did a lot of refactoring to clean up code. Switched from 4 space indents to 2" />
+    <MESSAGE value="InputData is now Kotlin and HelpDialog is a static method" />
+    <option name="LAST_COMMIT_MESSAGE" value="InputData is now Kotlin and HelpDialog is a static method" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
@@ -1136,27 +1079,7 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_144/src.zip!/java/util/Objects.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1656">
-          <caret line="96" column="22" selection-start-line="96" selection-start-column="22" selection-end-line="96" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_144/src.zip!/java/lang/NumberFormatException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="37" column="6" selection-start-line="37" selection-start-column="6" selection-end-line="37" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pgc/StageCloseFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pgc/StageCloseFactory.java" />
     <entry file="file://$PROJECT_DIR$/src/pgc/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="312">
@@ -1174,13 +1097,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pgc/StageCloseFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1176">
-          <caret line="58" column="15" selection-start-line="58" selection-start-column="15" selection-end-line="58" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pgc/StageCloseFactory.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_144/src.zip!/java/util/Objects.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1656">
@@ -1380,13 +1297,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pgc/Objekt.kt" />
-    <entry file="jar://$PROJECT_DIR$/../TomUtils/out/artifacts/TomUtils_jar/TomUtils.jar!/tom/utils/javafx/JavaFXUtilsKt.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="28">
-          <caret line="49" column="46" selection-start-line="49" selection-start-column="46" selection-end-line="49" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_144/javafx-src.zip!/javafx/scene/control/TextInputControl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="226">
@@ -1415,54 +1325,67 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pgc/InputDataJ.java">
+    <entry file="file://$PROJECT_DIR$/src/pgc/InputDataJ.java" />
+    <entry file="file://$PROJECT_DIR$/src/pgc/StageCloseFactory.java" />
+    <entry file="file://$PROJECT_DIR$/src/pgc/InputData.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-664">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        <state relative-caret-position="-398">
+          <caret line="21" column="4" selection-start-line="21" selection-start-column="4" selection-end-line="21" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pgc/HelpDialog.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1504">
-          <caret line="20" selection-start-line="20" selection-end-line="20" />
+        <state relative-caret-position="609">
+          <caret line="38" column="22" selection-start-line="38" selection-start-column="22" selection-end-line="38" selection-end-column="22" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pgc/InputData.kt">
+    <entry file="jar://$PROJECT_DIR$/../TomUtils/out/artifacts/TomUtils_jar/TomUtils.jar!/tom/utils/javafx/JavaFXUtilsKt.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-139">
-          <caret line="18" column="24" selection-start-line="18" selection-start-column="24" selection-end-line="18" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pgc/Controller.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+        <state relative-caret-position="695">
+          <caret line="47" column="46" selection-start-line="47" selection-start-column="46" selection-end-line="47" selection-end-column="46" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pgc/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="19" column="38" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
+        <state>
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pgc/StageCloseFactory.java">
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_144/javafx-src.zip!/javafx/stage/Stage.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-504">
-          <caret line="16" column="25" selection-start-line="16" selection-start-column="25" selection-end-line="16" selection-end-column="25" />
+        <state relative-caret-position="234">
+          <caret line="257" column="32" selection-start-line="257" selection-start-column="32" selection-end-line="257" selection-end-column="32" />
+          <folding>
+            <element signature="e#8302#8303#0" expanded="true" />
+            <element signature="e#8330#8331#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/ControllerTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="52" column="24" selection-start-line="52" selection-start-column="24" selection-end-line="52" selection-end-column="24" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pgc/Controller.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="273">
+          <caret line="58" column="24" selection-start-line="58" selection-start-column="24" selection-end-line="58" selection-end-column="24" />
         </state>
       </provider>
     </entry>
