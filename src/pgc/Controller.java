@@ -56,7 +56,7 @@ public class Controller {
     main.getChildren().addAll(confirmButton, refuseButton);
 
     stage.setScene(new Scene(main));
-    stage.show();
+    stage.showAndWait();
 
     return result[0];
   }
