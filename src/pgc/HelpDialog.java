@@ -16,17 +16,17 @@ import javafx.stage.Stage;
  * Created 2019-Jan-16
  * In Pressure-Gradient-Calculator-for-MS-Stars
  */
-public class HelpDialog {
-  public static void showHelpDialog() {
-    Stage stage = new Stage();
+public class HelpDialog extends Stage {
+
+  public HelpDialog() {
     GridPane main = new GridPane();
 
-    stage.setTitle("Help");
-    stage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+    this.setTitle("Help");
+    this.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
       if (e.getCode() == KeyCode.ESCAPE ||
           e.getCode() == KeyCode.F1)
       {
-        stage.close();
+        this.close();
       }
     });
 
@@ -105,14 +105,14 @@ public class HelpDialog {
     Button closeButton = new Button("Close");
     closeButton.addEventHandler(
         MouseEvent.MOUSE_CLICKED,
-        event -> stage.close()
+        event -> this.close()
     );
 
     main.add(closeButton, 1, 5);
 
-    stage.setScene(new Scene(main));
-    stage.show();
+
+    this.setScene(new Scene(main));
   }
 
-  private HelpDialog() { }
+
 }

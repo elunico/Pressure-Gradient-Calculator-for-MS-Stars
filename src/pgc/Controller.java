@@ -1,12 +1,16 @@
 package pgc;
 
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -22,6 +26,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Controller {
   static final String lineSeparator = System.lineSeparator();
@@ -61,12 +66,87 @@ public class Controller {
     return result[0];
   }
 
+  static void displayAlert(@NotNull String message) {
+    Stage stage = new Stage();
+    VBox main = new VBox();
+
+    main.setPadding(new Insets(5));
+    main.setSpacing(5);
+
+    main.getChildren().add(new Label(message));
+
+    Button okButton = new Button("Dismiss");
+
+    okButton.addEventHandler(
+        MouseEvent.MOUSE_CLICKED,
+        event -> stage.close()
+    );
+    main.getChildren().add(okButton);
+
+    stage.setScene(new Scene(main));
+    stage.show();
+  }
+
+  @NotNull
+  private static Font getFontForArea() {
+    String fontFamily = Font.getFamilies().contains("SF Mono") ? "SF Mono Medium" : "Courier New Bold";
+    int fontSize = fontFamily.equals("SF Mono Medium") ? 12 : 13;
+    return new Font(fontFamily, fontSize);
+  }
+
+  @NotNull
+  private static String formatTextForCSV(@NotNull String usingText) {
+    usingText = usingText.replace("Total: ", "");
+    String[] rawLines = usingText.split(lineSeparator);
+    String[] csvLines = new String[rawLines.length - 1];
+    for (int i = 0; i < rawLines.length - 1; i++) {
+      csvLines[i] = "\"" + rawLines[i] + "\"" + ",";
+    }
+    usingText = String.join(lineSeparator, csvLines);
+    usingText += lineSeparator + "Total," + rawLines[rawLines.length - 1];
+    return usingText;
+  }
+
+  static void augmentText(@NotNull final Parent n, final double v) {
+    ObservableList<Node> childrenUnmodifiable = n.getChildrenUnmodifiable();
+    for (Node child : childrenUnmodifiable) {
+      if (child instanceof Labeled) {
+        ((Labeled) child).setFont(Font.font(((Labeled) child).getFont().getSize() * v));
+      } else if (child instanceof TextInputControl) {
+        ((TextInputControl) child).setFont(Font.font(((TextInputControl) child).getFont().getSize() * v));
+      } else if (child instanceof Parent) {
+        augmentText((Parent) child, v);
+      }
+    }
+  }
   public TextField limitField;
   public TextField radiusField;
   public TextField densityField;
   public TextField stepsField;
   public CheckBox prettyExponentBox;
+  public FlowPane root;
+
   private boolean prettyExponents;
+  AtomicReference<Double> currentZoom = new AtomicReference<>(1d);
+
+  public void increaseTextSize() {
+    System.out.println(Main.stages);
+    for (Stage s : Main.stages.keySet()) {
+      augmentText(s.getScene().getRoot(), 1.2);
+      Main.stages.computeIfPresent(s, (k, v) -> v * 1.2);
+      s.getScene().getWindow().sizeToScene();
+    }
+    currentZoom.getAndUpdate(operand -> operand * 1.2);
+  }
+
+  public void decreaseTextSize() {
+    for (Stage s : Main.stages.keySet()) {
+      augmentText(s.getScene().getRoot(), 1 / 1.2);
+      Main.stages.computeIfPresent(s, (k, v) -> v * (1 / 1.2));
+      s.getScene().getWindow().sizeToScene();
+    }
+    currentZoom.getAndUpdate(operand -> operand * (1 / 1.2));
+  }
 
   public void goAction() {
     prettyExponents = prettyExponentBox.isSelected();
@@ -144,6 +224,7 @@ public class Controller {
   ) {
 
     Stage main = new Stage();
+    Main.stages.put(main, 1.0);
     main.setTitle("Results");
     main.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
       if (e.getCode() == KeyCode.ESCAPE ||
@@ -186,35 +267,8 @@ public class Controller {
     pane.getChildren().addAll(area, buttons);
 
     main.setScene(new Scene(pane));
+    checkCurrentZoom(main);
     main.show();
-  }
-
-  static void displayAlert(@NotNull String message) {
-    Stage stage = new Stage();
-    VBox main = new VBox();
-
-    main.setPadding(new Insets(5));
-    main.setSpacing(5);
-
-    main.getChildren().add(new Label(message));
-
-    Button okButton = new Button("Dismiss");
-
-    okButton.addEventHandler(
-        MouseEvent.MOUSE_CLICKED,
-        event -> stage.close()
-    );
-    main.getChildren().add(okButton);
-
-    stage.setScene(new Scene(main));
-    stage.show();
-  }
-
-  @NotNull
-  private static Font getFontForArea() {
-    String fontFamily = Font.getFamilies().contains("SF Mono") ? "SF Mono Medium" : "Courier New Bold";
-    int fontSize = fontFamily.equals("SF Mono Medium") ? 12 : 13;
-    return new Font(fontFamily, fontSize);
   }
 
   private void showSaveStageAction(final @NotNull InputData.Parameters parameters, final Stage main, final TextArea area) {
@@ -307,19 +361,6 @@ public class Controller {
     }
   }
 
-  @NotNull
-  private static String formatTextForCSV(@NotNull String usingText) {
-    usingText = usingText.replace("Total: ", "");
-    String[] rawLines = usingText.split(lineSeparator);
-    String[] csvLines = new String[rawLines.length - 1];
-    for (int i = 0; i < rawLines.length - 1; i++) {
-      csvLines[i] = "\"" + rawLines[i] + "\"" + ",";
-    }
-    usingText = String.join(lineSeparator, csvLines);
-    usingText += lineSeparator + "Total," + rawLines[rawLines.length - 1];
-    return usingText;
-  }
-
   @Nullable
   private File promptForSaveFile(@Nullable final Window usingWindow, @NotNull final String extension) {
     FileChooser fc = new FileChooser();
@@ -344,7 +385,30 @@ public class Controller {
   }
 
   public void helpAction() {
-    HelpDialog.showHelpDialog();
+    HelpDialog h = new HelpDialog();
+    h.setOnCloseRequest(event -> Main.stages.remove(h));
+    Main.stages.put(h, 1.0);
+    checkCurrentZoom(h);
+    h.show();
+  }
+
+  private void checkCurrentZoom(final Stage stage) {
+    while (Main.stages.get(stage) > currentZoom.get()) {
+      augmentText(stage.getScene().getRoot(), 1 / 1.2);
+      Main.stages.computeIfPresent(stage, (k, v) -> v * (1 / 1.2));
+    }
+    while (Main.stages.get(stage) < currentZoom.get()) {
+      augmentText(stage.getScene().getRoot(), 1.2);
+      Main.stages.computeIfPresent(stage, (k, v) -> v * 1.2);
+    }
+  }
+
+  public FlowPane getRoot() {
+    return root;
+  }
+
+  public void setRoot(@NotNull final FlowPane root) {
+    this.root = root;
   }
 
   private enum SaveType {EXCEL_TYPE, TEXT_TYPE}
