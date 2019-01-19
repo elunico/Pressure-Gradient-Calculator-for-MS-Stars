@@ -1,4 +1,4 @@
-package pgc;
+package com.tom.pgc;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -8,8 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -28,43 +26,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static javafx.scene.input.KeyEvent.KEY_PRESSED;
+import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
+import static javafx.stage.WindowEvent.WINDOW_CLOSE_REQUEST;
+
 public class Controller {
   static final String lineSeparator = System.lineSeparator();
-
-  private static boolean displayPrompt(
-      @NotNull String message,
-      @NotNull String confirmName,
-      @NotNull String refuseName
-  ) {
-    Stage stage = new Stage();
-    VBox main = new VBox();
-
-    main.setPadding(new Insets(5));
-    main.setSpacing(5);
-
-    main.getChildren().add(new Label(message));
-
-    Button confirmButton = new Button(confirmName);
-    Button refuseButton = new Button(refuseName);
-    final boolean[] result = new boolean[1];
-
-    confirmButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-      stage.close();
-      result[0] = true;
-    });
-
-    refuseButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-      stage.close();
-      result[0] = false;
-    });
-
-    main.getChildren().addAll(confirmButton, refuseButton);
-
-    stage.setScene(new Scene(main));
-    stage.showAndWait();
-
-    return result[0];
-  }
 
   static void displayAlert(@NotNull String message) {
     Stage stage = new Stage();
@@ -78,7 +45,7 @@ public class Controller {
     Button okButton = new Button("Dismiss");
 
     okButton.addEventHandler(
-        MouseEvent.MOUSE_CLICKED,
+        MOUSE_CLICKED,
         event -> stage.close()
     );
     main.getChildren().add(okButton);
@@ -107,30 +74,43 @@ public class Controller {
     return usingText;
   }
 
-  static void augmentText(@NotNull final Parent n, final double v) {
-    ObservableList<Node> childrenUnmodifiable = n.getChildrenUnmodifiable();
-    for (Node child : childrenUnmodifiable) {
-      if (child instanceof Labeled) {
-        ((Labeled) child).setFont(Font.font(((Labeled) child).getFont().getSize() * v));
-      } else if (child instanceof TextInputControl) {
-        ((TextInputControl) child).setFont(Font.font(((TextInputControl) child).getFont().getSize() * v));
-      } else if (child instanceof Parent) {
-        augmentText((Parent) child, v);
+  private static void augmentTextNode(final Node child, final double v) {
+    if (child instanceof Labeled) {
+      ((Labeled) child).setFont(Font.font(((Labeled) child).getFont().getSize() * v));
+    }
+    else if (child instanceof TextInputControl) {
+      ((TextInputControl) child).setFont(Font.font(((TextInputControl) child).getFont().getSize() * v));
+    }
+    else if (child instanceof ScrollPane) {
+      augmentTextNode(((ScrollPane) child).getContent(), v);
+    }
+    else if (child instanceof Parent) {
+      augmentText((Parent) child, v);
+    }
+  }
+
+  private static void augmentText(@NotNull final Parent parent, final double v) {
+    if (parent instanceof ScrollPane) {
+      augmentTextNode(((ScrollPane) parent).getContent(), v);
+    }
+    else {
+      ObservableList<Node> childrenUnmodifiable = parent.getChildrenUnmodifiable();
+      for (Node child : childrenUnmodifiable) {
+        augmentTextNode(child, v);
       }
     }
   }
+
   public TextField limitField;
   public TextField radiusField;
   public TextField densityField;
   public TextField stepsField;
   public CheckBox prettyExponentBox;
   public FlowPane root;
-
+  private AtomicReference<Double> currentZoom = new AtomicReference<>(1d);
   private boolean prettyExponents;
-  AtomicReference<Double> currentZoom = new AtomicReference<>(1d);
 
   public void increaseTextSize() {
-    System.out.println(Main.stages);
     for (Stage s : Main.stages.keySet()) {
       augmentText(s.getScene().getRoot(), 1.2);
       Main.stages.computeIfPresent(s, (k, v) -> v * 1.2);
@@ -211,7 +191,8 @@ public class Controller {
       String stringValue = String.valueOf(number);
       if (stringValue.contains("E") && prettyExponents) {
         result.add(stringValue.replace("E", " * (10^") + ")");
-      } else {
+      }
+      else {
         result.add(stringValue);
       }
     }
@@ -226,13 +207,12 @@ public class Controller {
     Stage main = new Stage();
     Main.stages.put(main, 1.0);
     main.setTitle("Results");
-    main.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-      if (e.getCode() == KeyCode.ESCAPE ||
-          e.getCode() == KeyCode.ENTER)
-      {
+    main.addEventHandler(KEY_PRESSED, e -> {
+      if (e.getCode() == KeyCode.ESCAPE || e.getCode() == KeyCode.ENTER) {
         main.close();
       }
     });
+    main.addEventHandler(WINDOW_CLOSE_REQUEST, e -> Main.stages.remove(main));
 
     VBox pane = new VBox();
     pane.setPadding(new Insets(5));
@@ -248,8 +228,8 @@ public class Controller {
     Button saveButton = new Button("Save as");
     Button closeButton = new Button("Close");
 
-    saveButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> showSaveStageAction(parameters, main, area));
-    closeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> main.close());
+    saveButton.addEventHandler(MOUSE_CLICKED, event -> showSaveStageAction(parameters, main, area));
+    closeButton.addEventHandler(MOUSE_CLICKED, event -> main.close());
 
     String totalString = String.valueOf(res.getKey());
     if (totalString.contains("E") && prettyExponents) {
@@ -295,7 +275,7 @@ public class Controller {
 
     Button closeButton1 = new Button("Go");
 
-    closeButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event1 -> {
+    closeButton1.addEventHandler(MOUSE_CLICKED, event1 -> {
       nstage.close();
       performSave(main, area.getText().replace("\n", lineSeparator),
                   excelButton.isSelected() ? SaveType.EXCEL_TYPE : SaveType.TEXT_TYPE,
@@ -349,13 +329,11 @@ public class Controller {
       return;
     }
 
-    try {
-      BufferedWriter br = new BufferedWriter(new FileWriter(saveFile));
+    try (BufferedWriter br = new BufferedWriter(new FileWriter(saveFile))) {
       if (withParameters) {
         writeParameters(br, parameters);
       }
       br.write(usingText);
-      br.close();
     } catch (IOException e) {
       displayAlert("File could not be saved" + lineSeparator + e.getMessage());
     }
@@ -393,13 +371,15 @@ public class Controller {
   }
 
   private void checkCurrentZoom(final Stage stage) {
+    System.out.println(currentZoom.get());
+    System.out.println(Main.stages.get(stage));
     while (Main.stages.get(stage) > currentZoom.get()) {
       augmentText(stage.getScene().getRoot(), 1 / 1.2);
-      Main.stages.computeIfPresent(stage, (k, v) -> v * (1 / 1.2));
+      Main.stages.compute(stage, (k, v) -> v == null ? 1 : v * (1 / 1.2));
     }
     while (Main.stages.get(stage) < currentZoom.get()) {
       augmentText(stage.getScene().getRoot(), 1.2);
-      Main.stages.computeIfPresent(stage, (k, v) -> v * 1.2);
+      Main.stages.compute(stage, (k, v) -> v == null ? 1 : v * 1.2);
     }
   }
 

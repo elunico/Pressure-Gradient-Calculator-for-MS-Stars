@@ -1,4 +1,4 @@
-package pgc
+package com.tom.pgc
 
 import java.lang.reflect.InvocationTargetException
 
@@ -34,8 +34,12 @@ class InputData(limitText: String, radiusText: String, densityText: String, step
     } else {
       try {
         val p = T::class.java.getDeclaredMethod("parse${T::class.java.simpleName.fixMe()}", String::class.java)
-        p.invoke(null, inputText) as? T
+        val parsed = p.invoke(null, inputText) as? T ?: throw IllegalArgumentException()
+        parsed
       } catch (e: InvocationTargetException) {
+        Controller.displayAlert("Please enter a valid " + T::class.java.simpleName + " for " + fieldName)
+        null
+      } catch (i: IllegalArgumentException) {
         Controller.displayAlert("Please enter a valid " + T::class.java.simpleName + " for " + fieldName)
         null
       }

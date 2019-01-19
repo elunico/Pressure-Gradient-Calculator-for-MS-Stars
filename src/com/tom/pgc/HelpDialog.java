@@ -1,10 +1,11 @@
-package pgc;
+package com.tom.pgc;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -21,12 +22,10 @@ public class HelpDialog extends Stage {
   public HelpDialog() {
     GridPane main = new GridPane();
 
-    this.setTitle("Help");
-    this.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-      if (e.getCode() == KeyCode.ESCAPE ||
-          e.getCode() == KeyCode.F1)
-      {
-        this.close();
+    setTitle("Help");
+    addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+      if (e.getCode() == KeyCode.ESCAPE || e.getCode() == KeyCode.F1) {
+        close();
       }
     });
 
@@ -103,15 +102,18 @@ public class HelpDialog extends Stage {
     main.add(comma, 1, 4);
 
     Button closeButton = new Button("Close");
-    closeButton.addEventHandler(
-        MouseEvent.MOUSE_CLICKED,
-        event -> this.close()
-    );
+    closeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> close());
 
     main.add(closeButton, 1, 5);
 
+    setScene(new Scene(new ScrollPane(main)));
+    sizeToScene();
+  }
 
-    this.setScene(new Scene(main));
+  @Override
+  public void close() {
+    super.close();
+    Main.stages.remove(this);
   }
 
 

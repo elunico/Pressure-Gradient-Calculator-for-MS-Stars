@@ -1,9 +1,7 @@
-package pgc;
+package com.tom.pgc;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
@@ -17,12 +15,11 @@ import static tom.utils.javafx.JavaFXUtilsKt.getRootFromFXML;
 
 public class Main extends Application {
 
+  static Map<Stage, Double> stages = Collections.synchronizedMap(new HashMap<>());
+
   public static void main(String[] args) {
     launch(args);
   }
-
-  static Map<Stage, Double> stages = Collections.synchronizedMap(new HashMap<>());
-
 
   @Override
   public void start(@NotNull Stage primaryStage) throws Exception {
@@ -35,13 +32,6 @@ public class Main extends Application {
 
     stages.put(primaryStage, 1.0);
 
-    primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-      if (e.getCode() == KeyCode.ENTER) {
-        controller.goAction();
-      } else if (e.getCode() == KeyCode.F1) {
-        controller.helpAction();
-      }
-    });
     primaryStage.setTitle("Main Sequence Calculator");
     primaryStage.setScene(new Scene(root));
     primaryStage.show();
