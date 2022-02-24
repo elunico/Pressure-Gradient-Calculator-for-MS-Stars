@@ -16,8 +16,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Pair;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -32,8 +30,16 @@ import static javafx.stage.WindowEvent.WINDOW_CLOSE_REQUEST;
 
 public class Controller {
   static final String lineSeparator = System.lineSeparator();
+  public TextField limitField;
+  public TextField radiusField;
+  public TextField densityField;
+  public TextField stepsField;
+  public CheckBox prettyExponentBox;
+  public FlowPane root;
+  private AtomicReference<Double> currentZoom = new AtomicReference<>(1d);
+  private boolean prettyExponents;
 
-  static void displayAlert(@NotNull String message) {
+  static void displayAlert(String message) {
     Stage stage = new Stage();
     VBox main = new VBox();
 
@@ -54,15 +60,13 @@ public class Controller {
     stage.show();
   }
 
-  @NotNull
   private static Font getFontForArea() {
     String fontFamily = Font.getFamilies().contains("SF Mono") ? "SF Mono Medium" : "Courier New Bold";
     int fontSize = fontFamily.equals("SF Mono Medium") ? 12 : 13;
     return new Font(fontFamily, fontSize);
   }
 
-  @NotNull
-  private static String formatTextForCSV(@NotNull String usingText) {
+  private static String formatTextForCSV(String usingText) {
     usingText = usingText.replace("Total: ", "");
     String[] rawLines = usingText.split(lineSeparator);
     String[] csvLines = new String[rawLines.length - 1];
@@ -76,39 +80,28 @@ public class Controller {
 
   private static void augmentTextNode(final Node child, final double v) {
     if (child instanceof Labeled) {
-      ((Labeled) child).setFont(Font.font(((Labeled) child).getFont().getSize() * v));
-    }
-    else if (child instanceof TextInputControl) {
-      ((TextInputControl) child).setFont(Font.font(((TextInputControl) child).getFont().getSize() * v));
-    }
-    else if (child instanceof ScrollPane) {
+      Font currentFont = ((Labeled) child).getFont();
+      ((Labeled) child).setFont(Font.font(currentFont.getFamily(), currentFont.getSize() * v));
+    } else if (child instanceof TextInputControl) {
+      Font currentFont = ((TextInputControl) child).getFont();
+      ((TextInputControl) child).setFont(Font.font(currentFont.getFamily(), currentFont.getSize() * v));
+    } else if (child instanceof ScrollPane) {
       augmentTextNode(((ScrollPane) child).getContent(), v);
-    }
-    else if (child instanceof Parent) {
+    } else if (child instanceof Parent) {
       augmentText((Parent) child, v);
     }
   }
 
-  private static void augmentText(@NotNull final Parent parent, final double v) {
+  private static void augmentText(final Parent parent, final double v) {
     if (parent instanceof ScrollPane) {
       augmentTextNode(((ScrollPane) parent).getContent(), v);
-    }
-    else {
+    } else {
       ObservableList<Node> childrenUnmodifiable = parent.getChildrenUnmodifiable();
       for (Node child : childrenUnmodifiable) {
         augmentTextNode(child, v);
       }
     }
   }
-
-  public TextField limitField;
-  public TextField radiusField;
-  public TextField densityField;
-  public TextField stepsField;
-  public CheckBox prettyExponentBox;
-  public FlowPane root;
-  private AtomicReference<Double> currentZoom = new AtomicReference<>(1d);
-  private boolean prettyExponents;
 
   public void increaseTextSize() {
     for (Stage s : Main.stages.keySet()) {
@@ -132,7 +125,7 @@ public class Controller {
     prettyExponents = prettyExponentBox.isSelected();
 
     InputData data = new InputData(limitField.getText(), radiusField.getText(),
-                                   densityField.getText(), stepsField.getText());
+        densityField.getText(), stepsField.getText());
     InputData.Parameters parameters = data.parse();
     if (parameters == null) {
       return;
@@ -159,8 +152,8 @@ public class Controller {
    * @throws ArithmeticException if the number of steps is high enough to overflow
    *                             {@link Double}
    */
-  @NotNull
-  private Pair<Double, String> calculateMainSequence(@NotNull InputData.Parameters parameters)
+
+  private Pair<Double, String> calculateMainSequence(InputData.Parameters parameters)
       throws ArithmeticException {
 
     int limit = parameters.getLimit();
@@ -191,8 +184,7 @@ public class Controller {
       String stringValue = String.valueOf(number);
       if (stringValue.contains("E") && prettyExponents) {
         result.add(stringValue.replace("E", " * (10^") + ")");
-      }
-      else {
+      } else {
         result.add(stringValue);
       }
     }
@@ -200,8 +192,8 @@ public class Controller {
   }
 
   private void showResultsStage(
-      @NotNull final InputData.Parameters parameters,
-      @NotNull final Pair<Double, String> res
+      final InputData.Parameters parameters,
+      final Pair<Double, String> res
   ) {
 
     Stage main = new Stage();
@@ -251,7 +243,7 @@ public class Controller {
     main.show();
   }
 
-  private void showSaveStageAction(final @NotNull InputData.Parameters parameters, final Stage main, final TextArea area) {
+  private void showSaveStageAction(final InputData.Parameters parameters, final Stage main, final TextArea area) {
     Stage nstage = new Stage();
     nstage.setTitle("Save Options");
 
@@ -278,13 +270,13 @@ public class Controller {
     closeButton1.addEventHandler(MOUSE_CLICKED, event1 -> {
       nstage.close();
       performSave(main, area.getText().replace("\n", lineSeparator),
-                  excelButton.isSelected() ? SaveType.EXCEL_TYPE : SaveType.TEXT_TYPE,
-                  includeBox.isSelected(), parameters
+          excelButton.isSelected() ? SaveType.EXCEL_TYPE : SaveType.TEXT_TYPE,
+          includeBox.isSelected(), parameters
       );
     });
 
     mainpane.getChildren().addAll(label, includeBox, textButton,
-                                  excelButton, closeButton1);
+        excelButton, closeButton1);
 
     nstage.setScene(new Scene(mainpane));
     nstage.show();
@@ -306,7 +298,7 @@ public class Controller {
    */
   private void performSave(
       Window usingWindow,
-      @NotNull String usingText,
+      String usingText,
       SaveType type,
       boolean withParameters,
       InputData.Parameters parameters
@@ -339,8 +331,8 @@ public class Controller {
     }
   }
 
-  @Nullable
-  private File promptForSaveFile(@Nullable final Window usingWindow, @NotNull final String extension) {
+
+  private File promptForSaveFile(final Window usingWindow, final String extension) {
     FileChooser fc = new FileChooser();
     fc.getExtensionFilters().add(new FileChooser.ExtensionFilter(extension.toUpperCase() + " files", "*" + extension));
     fc.setInitialFileName("untitled" + extension);
@@ -387,7 +379,7 @@ public class Controller {
     return root;
   }
 
-  public void setRoot(@NotNull final FlowPane root) {
+  public void setRoot(final FlowPane root) {
     this.root = root;
   }
 
